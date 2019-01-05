@@ -17,7 +17,7 @@ Requires Litium 7.
 
 ### Prerequisites
 
-This library aims at extending the e-comemrce platform [Litium](https://www.litium.se/). In order to build and develop the project, you need to fulfill their [development system requirements](https://docs.litium.com/documentation/get-started/system-requirements#DevEnv).
+This library aims at extending the e-comemrce platform [Litium](https://www.litium.se/). In order to use and develop the project, you need to fulfill their [development system requirements](https://docs.litium.com/documentation/get-started/system-requirements#DevEnv).
 
 ### Install
 
