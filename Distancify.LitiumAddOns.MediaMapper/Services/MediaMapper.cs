@@ -153,7 +153,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
 
         private void AttachMetadata(IEnumerable<MediaProfile> mediaList)
         {
-            foreach (MediaProfile media in mediaList)
+            foreach (MediaProfile media in mediaList.Where(r => r.Metadata != null))
             {
                 var file = media.File.MakeWritableClone();
 

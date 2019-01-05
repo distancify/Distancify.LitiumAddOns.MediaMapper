@@ -60,7 +60,6 @@ public class MyMediaProfiler : BaseMediaProfiler
     {
         var articleNumber = groups["articleNumber"].Value;
         var productIds = new[] { (articleNumber, false) };
-        var order = default(int);
 
         var archivePath = GetArchivePath(articleNumber);
 
