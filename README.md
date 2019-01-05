@@ -42,13 +42,10 @@ public class MyMediaProfiler : BaseMediaProfiler
 
     protected override MediaProfile CreateMediaProfile(File file)
     {
-        if (file.IsImage())
+        var match = _imagePattern.Match(file.Name);
+        if (match.Success)
         {
-            var match = _imagePattern.Match(file.Name);
-            if (match.Success)
-            {
-                return CreateMediaProfile(file, match.Groups);
-            }
+            return CreateMediaProfile(file, match.Groups);
         }
 
         return null;
