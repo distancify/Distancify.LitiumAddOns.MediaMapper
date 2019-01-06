@@ -22,7 +22,11 @@ This library aims at extending the e-comemrce platform [Litium](https://www.liti
 
 ### Install
 
-Install the add-on by adding the [NuGet package](https://www.nuget.org/packages/Distancify.LitiumAddOns.MediaMapper) to your project. Then add the scheduled task needed to perform the actual mapping. Note that if you have a multi-node cluster, run this task on one of your machines, or your application server.
+```
+Install-Package Distancify.LitiumAddOns.MediaMapper
+```
+
+Then add the scheduled task needed to perform the actual mapping. Note that if you have a multi-node cluster, run this task on one of your machines, or your application server.
 
 ```xml
 <scheduledTask type="Distancify.LitiumAddOns.MediaMapper.ScheduledTask, Distancify.LitiumAddOns.MediaMapper" startTime="00:05" interval="5m" />
