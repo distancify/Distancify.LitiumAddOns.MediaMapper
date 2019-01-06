@@ -1,0 +1,28 @@
+branches:
+  only:
+  - /release\/.+/
+init:
+- cmd: "set appVeyorBuildVersion=%appveyor_build_version%\necho appVeyorBuildVersion:%appVeyorBuildVersion% \n\nset branch=%APPVEYOR_REPO_BRANCH%\necho branch:%branch%\n\nset gitVersion=%branch:~-3%\necho gitversion:%gitVersion%\n\nset newVersion=%gitVersion%.%APPVEYOR_BUILD_NUMBER%\necho %newVersion%\n\n"
+- cmd: appveyor UpdateBuild -Version "%newVersion%"
+install:
+- cmd: nuget sources add -Name LitiumNugetFeed -Source https://nuget.litium.com/nuget/ -UserName %litium_nuget_user% -Password %litium_nuget_password%
+before_build:
+- cmd: nuget restore -Verbosity quiet
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+build:
+  verbosity: minimal
+after_build:
+- cmd: nuget pack .\Distancify.LitiumAddOns.MediaMapper\Distancify.LitiumAddOns.MediaMapper.csproj -Version %APPVEYOR_BUILD_VERSION%
+artifacts:
+- path: '**\Distancify.LitiumAddOns.MediaMapper.*.nupkg' 
+deploy:
+  provider: NuGet
+  api_key:
+    secure: xlC8lzfO3RDrC0seyo/FgrHZIh1S5gNvZk2Ns0RozOt+18BQRR52xc88tD6hEBeC
+  skip_symbols: false
+  artifact: /.*\.nupkg/

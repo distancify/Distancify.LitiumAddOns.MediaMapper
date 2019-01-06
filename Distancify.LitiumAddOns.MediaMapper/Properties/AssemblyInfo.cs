@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Distancify AB")]
 [assembly: AssemblyProduct("Distancify.LitiumAddOns.MediaMapper")]
-[assembly: AssemblyCopyright("Copyright © Distancify AB 2018")]
+[assembly: AssemblyCopyright("Copyright © Distancify AB 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
