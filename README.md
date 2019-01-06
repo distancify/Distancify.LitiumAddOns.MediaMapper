@@ -87,7 +87,7 @@ public class MediaMapperInstaller : IComponentInstaller
 
 ### Mapping to Custom Fields
 
-This add-on comes with the ability to map to Litium's built-in MediaPointerFile and MediaPointerImageArray field types. You can easily add support for your custom fields by implemeting the `IFieldSetter<>` interface.
+This add-on comes with the ability to map to Litium's built-in MediaPointerFile and MediaPointerImageArray field types. You can easily add support for your custom fields by implemeting the `IFieldSetter` interface.
 
 ### Customized Image Sorting
 
