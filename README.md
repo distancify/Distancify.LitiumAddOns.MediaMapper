@@ -1,6 +1,6 @@
 # Distancify.LitiumAddOns.MediaMapper
 
-[![Build status](https://ci.appveyor.com/api/projects/status/acu377nabtjj1fas?svg=true)](https://ci.appveyor.com/project/KristofferLindvall/distancify-litiumaddons-mediamapper)
+[![Build status](https://ci.appveyor.com/api/projects/status/acu377nabtjj1fas?svg=true)](https://ci.appveyor.com/project/DistancifyAB/distancify-litiumaddons-mediamapper)
 
 Litium Add-on to programmatically organize media in the media archive and link media to other entities.
 
