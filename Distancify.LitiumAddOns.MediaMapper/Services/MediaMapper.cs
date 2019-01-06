@@ -8,6 +8,7 @@ using Litium.Media;
 using Litium.Products;
 using Serilog;
 using Polly;
+using Distancify.SerilogExtensions;
 
 namespace Distancify.LitiumAddOns.MediaMapper.Services
 {
