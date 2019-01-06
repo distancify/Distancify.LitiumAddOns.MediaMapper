@@ -73,7 +73,7 @@ public class MyMediaProfiler : BaseMediaProfiler
 }
 ```
 
-Next, you need to register at least one media mapper in the dependency injection container, using your newly created profiler:
+Next, you need to register at least one media mapper in the dependency injection container, using your newly created profiler. Each Mapper instance monitors a folder in the Media Archive module:
 
 ```csharp
 public class MediaMapperInstaller : IComponentInstaller
@@ -85,7 +85,7 @@ public class MediaMapperInstaller : IComponentInstaller
 }
 ```
 
-### Maping to Custom Fields
+### Mapping to Custom Fields
 
 This add-on comes with the ability to map to Litium's built-in MediaPointerFile and MediaPointerImageArray field types. You can easily add support for your custom fields by implemeting the `IFieldSetter<>` interface.
 
