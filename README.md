@@ -8,6 +8,7 @@ This add-on:
 
 - Automatically puts uploaded files in the correct folder
 - Automatically link files to any product fields, including your custom ones
+- Allows you to map files based on more than just filename, including file content and EXIF data
 - Allows you to specify a sort order for a product's display images
 - Allows you to update a file's fields/meta data as it is mapped
 
