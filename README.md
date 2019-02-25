@@ -38,12 +38,17 @@ This add-on uses the [Serilog framework](https://medium.com/@kristoffer.lindvall
 
 ### Configure
 
-You need to create the class that is responsible for classifying files by implementing the `IMediaProfiler` interface. This is easily done by inheriting the BaseMediaProfiler class. You don't need to register your class with Litiums Dependency Injector. This is handled automatically for you.
+You need to create the class that is responsible for classifying files by implementing the `IMediaProfiler` interface. This is easily done by inheriting the BaseMediaProfiler class.
 
 ```csharp
+using Distancify.LitiumAddOns.MediaMapper;
+using System.Text.RegularExpressions;
+using Litium.Media;
+using Litium.FieldFramework;
+
 public class MyMediaProfiler : BaseMediaProfiler
 {
-    private Regex _imagePattern = new Regex(@"^(?<articleNumber>.+?)\.jpeg$");
+    private Regex _imagePattern = new Regex(@"^(?<articleNumber>.+?)\.jpe?g$");
 
     protected override MediaProfile CreateMediaProfile(File file)
     {
@@ -81,7 +86,7 @@ public class MyMediaProfiler : BaseMediaProfiler
 Next, you need to register at least one media mapper in the dependency injection container, using your newly created profiler. Each Mapper instance monitors a folder in the Media Archive module:
 
 ```csharp
-public class MediaMapperInstaller : IComponentInstaller
+public class MediaMapperConfig : IComponentInstaller
 {
     public void Install(IIoCContainer container, Assembly[] assemblies)
     {

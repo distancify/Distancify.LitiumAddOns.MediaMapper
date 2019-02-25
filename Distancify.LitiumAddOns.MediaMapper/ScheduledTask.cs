@@ -2,21 +2,22 @@
 using Distancify.LitiumAddOns.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using Litium.Owin.InversionOfControl;
 
 namespace Distancify.LitiumAddOns.MediaMapper
 {
     public class ScheduledTask : NonConcurrentTask
     {
-        private readonly IList<IMediaMapper> _mediaMappers;
+        private readonly IIoCContainer _container;
 
-        public ScheduledTask(IEnumerable<IMediaMapper> mediaMappers)
+        public ScheduledTask(IIoCContainer container)
         {
-            _mediaMappers = mediaMappers.ToList();
+            _container = container;
         }
         
         protected override void Run()
         {
-            foreach (var m in _mediaMappers)
+            foreach (var m in _container.ResolveAll<IMediaMapper>())
             {
                 m.Map();
             }

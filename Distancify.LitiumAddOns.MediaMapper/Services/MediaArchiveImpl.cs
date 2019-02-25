@@ -47,7 +47,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
                     continue;
                 }
 
-                CreateFolder(current.SystemId, folder, current.FieldTemplateSystemId);
+                current = CreateFolder(current.SystemId, folder, current.FieldTemplateSystemId);
             }
         }
 
@@ -66,7 +66,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
             return null;
         }
 
-        private void CreateFolder(Guid parentId, string name, Guid folderTemplateId)
+        private Folder CreateFolder(Guid parentId, string name, Guid folderTemplateId)
         {
             var f = new Folder(folderTemplateId, name)
             {
@@ -75,6 +75,8 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
             };
 
             _folderService.Create(f);
+
+            return f;
         }
 
         public override Folder GetFolder(string path)
