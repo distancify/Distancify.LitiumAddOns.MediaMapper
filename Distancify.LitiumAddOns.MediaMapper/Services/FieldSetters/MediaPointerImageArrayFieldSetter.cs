@@ -19,15 +19,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services.FieldSetters
             _mediaArchive = mediaArchive;
         }
 
-        /// <summary>
-        /// Override to provide custom sorting rules to images
-        /// </summary>
-        /// <param name="files"></param>
-        /// <returns></returns>
-        protected virtual IEnumerable<File> Sort(IEnumerable<File> files)
-        {
-            return files;
-        } 
+        public static Action<FieldContainer, IFieldDefinition, List<File>> Sort { get; set; }
 
         public void Set(FieldContainer entity, IFieldDefinition field, File file)
         {
@@ -39,7 +31,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services.FieldSetters
             images.RemoveAll(r => string.Equals(r.Name, file.Name, StringComparison.OrdinalIgnoreCase));
             images.Add(_mediaArchive.GetFile(file.SystemId));
 
-            images = Sort(images).ToList();
+            Sort?.Invoke(entity, field, images);
 
             entity.AddOrUpdateValue(field.Id, images.Select(r => r.SystemId).ToList());
         }

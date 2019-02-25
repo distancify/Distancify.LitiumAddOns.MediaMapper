@@ -101,10 +101,13 @@ This add-on comes with the ability to map to Litium's built-in MediaPointerFile 
 
 ### Customized Image Sorting
 
-By decorating the built-in MediaPointerImageArrayFieldMediaSetter class, we can implement custom sorting rules for images mapped to products. Here's an example:
+The `MediaPointerImageArrayFieldSetter` comes with a static configuration that can be used to implement custom sorting logic for when setting the media order to a field. Here's an example:
 
 ```csharp
-
+MediaPointerImageArrayFieldSetter.Sort = (entity, field, images) =>
+{
+    images.Sort((a, b) => string.Compare(a.Name, b.Name));
+};
 ```
 
 ## Publishing
