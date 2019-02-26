@@ -42,7 +42,7 @@ This add-on uses the [Serilog framework](https://medium.com/@kristoffer.lindvall
 
 ### Configure
 
-You need to create the class that is responsible for classifying files by implementing the `IMediaProfiler` interface. This is easily done by inheriting the BaseMediaProfiler class.
+You need to create the class that is responsible for classifying files by implementing the `IMediaProfiler` interface.
 
 ```csharp
 using Distancify.LitiumAddOns.MediaMapper;
@@ -50,34 +50,28 @@ using System.Text.RegularExpressions;
 using Litium.Media;
 using Litium.FieldFramework;
 
-public class MyMediaProfiler : BaseMediaProfiler
+public class MyMediaProfiler : IMediaProfiler
 {
     private Regex _imagePattern = new Regex(@"^(?<articleNumber>.+?)\.jpe?g$");
 
-    protected override MediaProfile CreateMediaProfile(File file)
+    public MediaProfile GetMediaProfile(MediaProfileBuilder builder)
     {
-        var match = _imagePattern.Match(file.Name);
+        var match = _imagePattern.Match(builder.File.Name);
         if (match.Success)
         {
-            return CreateMediaProfile(file, match.Groups);
+            return CreateMediaProfile(builder, match.Groups);
         }
 
         return null;
     }
 
-    public override bool HasMatchingProfile(string fileName)
-    {
-        return _imagePattern.IsMatch(fileName);
-    }
-
-    private MediaProfile CreateMediaProfile(File file, GroupCollection groups)
+    private MediaProfile CreateMediaProfile(MediaProfileBuilder builder, GroupCollection groups)
     {
         var articleNumber = groups["articleNumber"].Value;
-        var productIds = new[] { (articleNumber, false) };
-
-        var archivePath = GetArchivePath(articleNumber);
-
-        return new MediaProfile(file, productIds, SystemFieldDefinitionConstants.Images, null, archivePath);
+        builder.MapToBaseProductImages(articleNumber);
+        builder.ArchiveTo(GetArchivePath(articleNumber));
+        builder.SetField("MediaType", "Product");
+        return builder.Create();
     }
 
     private string GetArchivePath(string articleNumber)

@@ -63,27 +63,29 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
         /// <returns>true if all products was updates successfully, otherwise false</returns>
         private bool UpdateProducts(MediaProfile media)
         {
-            foreach ((string productId, bool isVariant) in media.Products)
+            if (media.MediaEntityMappings == null) return true;
+
+            foreach (var mapping in media.MediaEntityMappings)
             {
                 var productFieldUpdate = Policy.Handle<DataException>()
                     .WaitAndRetry(MaximumProductUpdateRetries, (retryCount) => TimeSpan.FromSeconds(retryCount))
                     .ExecuteAndCapture(() => {
 
-                        if (isVariant)
+                        if (mapping.EntityType == EntityTypeEnum.Variant)
                         {
-                            var variant = _variantService.Get(productId)?.MakeWritableClone();
+                            var variant = _variantService.Get(mapping.EntityId)?.MakeWritableClone();
                             if (variant != null)
                             {
-                                SetField(variant.Fields, media.FieldId, media.File);
+                                SetField(variant.Fields, mapping.FieldId, media.File);
                                 _variantService.Update(variant);
                             }
                         }
-                        else
+                        else if (mapping.EntityType == EntityTypeEnum.BaseProduct)
                         {
-                            var product = _baseProductService.Get(productId)?.MakeWritableClone();
+                            var product = _baseProductService.Get(mapping.EntityId)?.MakeWritableClone();
                             if (product != null)
                             {
-                                SetField(product.Fields, media.FieldId, media.File);
+                                SetField(product.Fields, mapping.FieldId, media.File);
                                 _baseProductService.Update(product);
                             }
                         }
@@ -92,10 +94,10 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
                 if (productFieldUpdate.Outcome == OutcomeType.Failure)
                 {
                     this.Log().ForContext("FileID", media.File.SystemId)
-                        .ForContext("FieldID", media.FieldId)
+                        .ForContext("FieldID", mapping.FieldId)
                         .ForContext("Filename", media.File.Name)
-                        .ForContext("ArticleNumber", productId)
-                        .ForContext("IsVariant", isVariant)
+                        .ForContext("EntityType", mapping.EntityType.ToString())
+                        .ForContext("EntityId", mapping.EntityId)
                         .Error(productFieldUpdate.FinalException, "Could not map media file");
                     return false;
                 }
@@ -146,7 +148,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
         {
             return _mediaArchive.GetFiles(GetUploadFolder(), false)
                 .OrderBy(r => r.LastWriteTimeUtc)
-                .Select(r => _mediaProfiler.GetMediaProfile(r))
+                .Select(r => _mediaProfiler.GetMediaProfile(new MediaProfileBuilder(r)))
                 .Where(r => r != null);
         }
 
@@ -158,11 +160,11 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
 
         private void AttachMetadata(IEnumerable<MediaProfile> mediaList)
         {
-            foreach (MediaProfile media in mediaList.Where(r => r.Metadata != null))
+            foreach (MediaProfile media in mediaList.Where(r => r.Fields != null))
             {
                 var file = media.File.MakeWritableClone();
 
-                foreach (var item in media.Metadata)
+                foreach (var item in media.Fields)
                 {
                     file.Fields.AddOrUpdateValue(item.Key, item.Value);
                 }

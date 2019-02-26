@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Distancify.LitiumAddOns.MediaMapper.Models;
 using Litium.Media;
 
 namespace Distancify.LitiumAddOns.MediaMapper
@@ -6,9 +7,8 @@ namespace Distancify.LitiumAddOns.MediaMapper
     public class MediaProfile
     {
         public readonly File File;
-        public readonly ImmutableDictionary<string, object> Metadata;
-        public readonly string FieldId;
-        public readonly (string productId, bool isVariant)[] Products;
+        public readonly ImmutableDictionary<string, object> Fields;
+        public readonly IImmutableList<MediaEntityMapping> MediaEntityMappings;
 
         /// <summary>
         /// Path to media archive folder relative to archive folder in configuration
@@ -22,17 +22,15 @@ namespace Distancify.LitiumAddOns.MediaMapper
         /// <param name="metadata"></param>
         /// <param name="type"></param>
         /// <param name="archivePath">Path to media archive folder relative to archive folder in configuration</param>
-        public MediaProfile(File file,
-            (string productId, bool isVariant)[] products,
-            string fieldId,
-            ImmutableDictionary<string, object> metadata,
-            string archivePath = null)
+        internal MediaProfile(File file,
+            IImmutableList<MediaEntityMapping> mediaEntityMappings,
+            ImmutableDictionary<string, object> fields,
+            string archivePath)
         {
             File = file;
-            Products = products;
-            FieldId = fieldId;
-            Metadata = metadata;
+            Fields = fields;
             ArchivePath = archivePath;
+            MediaEntityMappings = mediaEntityMappings;
         }
     }
 }
