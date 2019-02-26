@@ -47,8 +47,6 @@ You need to create the class that is responsible for classifying files by implem
 ```csharp
 using Distancify.LitiumAddOns.MediaMapper;
 using System.Text.RegularExpressions;
-using Litium.Media;
-using Litium.FieldFramework;
 
 public class MyMediaProfiler : IMediaProfiler
 {
