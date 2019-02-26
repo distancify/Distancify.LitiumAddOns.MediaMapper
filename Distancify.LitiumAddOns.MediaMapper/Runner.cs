@@ -21,6 +21,7 @@ namespace Distancify.LitiumAddOns.MediaMapper
     {
         private Task _task;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+        private readonly object _lock = new object();
 
         public Runner(IIoCContainer container, EventBroker eventBroker, IApplicationLifetime applicationLifetime) : this(
             container,
@@ -45,7 +46,10 @@ namespace Distancify.LitiumAddOns.MediaMapper
                 {
                     foreach (var m in container.ResolveAll<IMediaMapper>().Where(r => r.GetUploadFolder()?.SystemId == ev.Item.FolderSystemId))
                     {
-                        m.Map();
+                        lock (_lock)
+                        {
+                            m.Map();
+                        }
                     }
                 }
             });
@@ -62,7 +66,10 @@ namespace Distancify.LitiumAddOns.MediaMapper
 
                             foreach (var m in container.ResolveAll<IMediaMapper>())
                             {
-                                m.Map();
+                                lock (_lock)
+                                {
+                                    m.Map();
+                                }
                             }
                         }
                     }
