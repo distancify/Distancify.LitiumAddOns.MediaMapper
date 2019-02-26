@@ -11,6 +11,8 @@
     <AssemblyName>Distancify.LitiumAddOns.MediaMapper</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -119,7 +121,8 @@
   <ItemGroup>
     <Compile Include="BaseMediaProfiler.cs" />
     <Compile Include="IIoCContainerExtensions.cs" />
-    <Compile Include="ScheduledTask.cs" />
+    <Compile Include="Runner.cs" />
+    <Compile Include="Services\FieldSetters\PointerFieldSetter.cs" />
     <Compile Include="Services\MediaArchive.cs" />
     <Compile Include="Services\MediaArchiveImpl.cs" />
     <Compile Include="IFieldSetter.cs" />
@@ -136,6 +139,5 @@
     <None Include="Distancify.LitiumAddOns.MediaMapper.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

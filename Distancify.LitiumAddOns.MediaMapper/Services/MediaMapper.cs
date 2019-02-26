@@ -21,7 +21,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
         private readonly IMediaProfiler _mediaProfiler;        
         private readonly IList<IFieldSetter> _fieldSetters;
 
-        private readonly string _targetFolder;
+        private readonly string _uploadFolder;
 
         private const int MaximumProductUpdateRetries = 2;
 
@@ -39,12 +39,12 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
             _mediaArchive = mediaArchive;
             _mediaProfiler = mediaProfiler;            
             _fieldSetters = fieldSetters.ToList();
-            _targetFolder = mediaUploadFolder?.Replace('\\', '/').Trim('/');
+            _uploadFolder = mediaUploadFolder?.Replace('\\', '/').Trim('/');
         }
 
         public void Map()
         {
-            var mediaList = GetProfiledMediaFromTargetFolder().ToList();
+            var mediaList = GetProfiledMediaFromUploadFolder().ToList();
             AttachMetadata(mediaList);
 
             foreach (var media in mediaList)
@@ -136,20 +136,24 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
 
         private void MoveMediaFile(MediaProfile media)
         {
-            var f = string.Format("{0}/{1}", _targetFolder, media.ArchivePath);
+            var f = string.Format("{0}/{1}", _uploadFolder, media.ArchivePath);
             _mediaArchive.EnsureFolderExists(f);
             var targetFolder = _mediaArchive.GetFolder(f);
             _mediaArchive.MoveFile(media.File.SystemId, targetFolder);
         }
 
-        private IEnumerable<MediaProfile> GetProfiledMediaFromTargetFolder()
+        private IEnumerable<MediaProfile> GetProfiledMediaFromUploadFolder()
         {
-            _mediaArchive.EnsureFolderExists(_targetFolder);
-            var targetFolder = _mediaArchive.GetFolder(_targetFolder);
-            return _mediaArchive.GetFiles(targetFolder, false)
+            return _mediaArchive.GetFiles(GetUploadFolder(), false)
                 .OrderBy(r => r.LastWriteTimeUtc)
                 .Select(r => _mediaProfiler.GetMediaProfile(r))
                 .Where(r => r != null);
+        }
+
+        public Folder GetUploadFolder()
+        {
+            _mediaArchive.EnsureFolderExists(_uploadFolder);
+            return _mediaArchive.GetFolder(_uploadFolder);
         }
 
         private void AttachMetadata(IEnumerable<MediaProfile> mediaList)

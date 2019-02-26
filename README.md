@@ -26,10 +26,14 @@ This library aims at extending the e-comemrce platform [Litium](https://www.liti
 Install-Package Distancify.LitiumAddOns.MediaMapper
 ```
 
-Then add the scheduled task needed to perform the actual mapping. Note that if you have a multi-node cluster, run this task on one of your machines, or your application server.
+To enable the mapper, add the following app setting in web.config. Note that if you have a multi-node cluster, only enable the mapper on one of your machines to avoid concurrency issues.
 
 ```xml
-<scheduledTask type="Distancify.LitiumAddOns.MediaMapper.ScheduledTask, Distancify.LitiumAddOns.MediaMapper" startTime="00:05" interval="5m" />
+<configuration>
+  <appSettings>
+    <add key="MediaMapperEnabled" value="true"/>
+  </appSettings>
+</configuration>
 ```
 
 #### Logging
