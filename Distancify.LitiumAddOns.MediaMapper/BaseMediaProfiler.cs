@@ -26,6 +26,7 @@ namespace Distancify.LitiumAddOns.MediaMapper
                 builder.SetField(field.Key, field.Value);
             }
 
+            builder.ArchiveTo(archivePath);
             return builder.Create();
         }
 
