@@ -23,6 +23,5 @@ namespace Distancify.LitiumAddOns.MediaMapper
                         uploadFolder))
                     .RegisterAsSingleton();
         }
-
     }
 }
