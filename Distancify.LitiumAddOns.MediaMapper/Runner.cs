@@ -9,6 +9,8 @@ using Litium.Foundation;
 using System.Threading.Tasks;
 using System.Configuration;
 using Distancify.SerilogExtensions;
+using Litium.Runtime.DistributedLock;
+using System;
 
 namespace Distancify.LitiumAddOns.MediaMapper
 {
@@ -21,18 +23,28 @@ namespace Distancify.LitiumAddOns.MediaMapper
     {
         private Task _task;
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-        private readonly object _lock = new object();
+        private const string lockKey = "DistancifyMediaMapperRunner";
 
-        public Runner(IIoCContainer container, EventBroker eventBroker, IApplicationLifetime applicationLifetime) : this(
+        public Runner(
+            IIoCContainer container,
+            EventBroker eventBroker,
+            IApplicationLifetime applicationLifetime,
+            DistributedLockService distributedLockService) : this(
             container,
             eventBroker,
             applicationLifetime,
+            distributedLockService,
             ConfigurationManager.AppSettings["MediaMapperEnabled"])
         {
 
         }
 
-        public Runner(IIoCContainer container, EventBroker eventBroker, IApplicationLifetime applicationLifetime, string enabledSetting)
+        public Runner(
+            IIoCContainer container,
+            EventBroker eventBroker,
+            IApplicationLifetime applicationLifetime,
+            DistributedLockService distributedLockService,
+            string enabledSetting)
         {
             if (string.IsNullOrEmpty(enabledSetting) || !bool.TryParse(enabledSetting, out bool enabled) || !enabled)
             {
@@ -40,16 +52,14 @@ namespace Distancify.LitiumAddOns.MediaMapper
                 return;
             }
 
-            var subscription = eventBroker.Subscribe<FileCreated>(ev =>
+            var subscription = eventBroker.Subscribe<FileCreated>(EventScope.Local, ev =>
             {
                 using (Solution.Instance.SystemToken.Use())
+                using (distributedLockService.AcquireLock(lockKey, TimeSpan.FromSeconds(10)))
                 {
                     foreach (var m in container.ResolveAll<IMediaMapper>().Where(r => r.GetUploadFolder()?.SystemId == ev.Item.FolderSystemId))
                     {
-                        lock (_lock)
-                        {
-                            m.Map();
-                        }
+                        m.Map();
                     }
                 }
             });
@@ -59,6 +69,7 @@ namespace Distancify.LitiumAddOns.MediaMapper
                 _task = Task.Run(() =>
                 {
                     using (Solution.Instance.SystemToken.Use())
+                    using (distributedLockService.AcquireLock(lockKey, TimeSpan.FromSeconds(10)))
                     {
                         while (!_cancellationTokenSource.Token.IsCancellationRequested)
                         {
@@ -66,10 +77,7 @@ namespace Distancify.LitiumAddOns.MediaMapper
 
                             foreach (var m in container.ResolveAll<IMediaMapper>())
                             {
-                                lock (_lock)
-                                {
-                                    m.Map();
-                                }
+                                m.Map();
                             }
                         }
                     }
