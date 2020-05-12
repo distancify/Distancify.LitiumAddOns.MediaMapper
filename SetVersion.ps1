@@ -23,4 +23,4 @@ function SetVersion ($file, $fileVersion, $packageVersion)
     $sw.Close()
 }
 
-SetVersion "Distancify.LitiumAddOns.Serilog\Properties\AssemblyInfo.cs" $Env:FILEVERSION $Env:PACKAGEVERSION
+SetVersion "Distancify.LitiumAddOns.MediaMapper\Properties\AssemblyInfo.cs" $Env:FILEVERSION $Env:PACKAGEVERSION
