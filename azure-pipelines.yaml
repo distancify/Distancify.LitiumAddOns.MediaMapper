@@ -1,0 +1,76 @@
+
+trigger:
+  tags:
+    include:
+    - v*
+  branches:
+    include:
+    - master
+
+pool: 'Default'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 4.9.1'
+  inputs:
+    versionSpec: 4.9.1
+
+- task: NuGetCommand@2
+  displayName: 'Restore NuGet packages'
+  inputs:
+    restoreSolution: '$(solution)'
+    feedsToUse: config
+    nugetConfigPath: NuGet.config
+    externalFeedCredentials: Litium
+
+- task: PowerShell@2
+  displayName: 'SetBuildVariables.ps1'
+  inputs:
+    targetType: 'filePath'
+    filePath: 'SetBuildVariables.ps1'
+
+- task: PowerShell@2
+  displayName: 'SetVersion.ps1'
+  inputs:
+    targetType: 'filePath'
+    filePath: 'SetVersion.ps1'
+
+- task: VSBuild@1
+  displayName: 'Build solution'
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:SkipInvalidConfigurations=true /p:GeneratePackageOnBuild="false"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  displayName: 'Run Tests'
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet pack'
+  inputs:
+    command: pack
+    packagesToPack: '**/Distancify.LitiumAddOns.MediaMapper.csproj'
+
+- task: NuGetCommand@2
+  displayName: 'Push to internal NuGet feed'
+  inputs:
+    command: push
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    publishVstsFeed: '417e6578-98ed-497d-b969-19ea06b1870e'
+
+- task: NuGetCommand@2
+  condition: eq(variables['pushToNugetOrg'], 'true')
+  displayName: 'Push to nuget.org'
+  inputs:
+    command: push
+    nuGetFeedType: external
+    publishFeedCredentials: nuget.org/distancify
