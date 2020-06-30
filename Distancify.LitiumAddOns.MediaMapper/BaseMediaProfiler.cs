@@ -11,14 +11,21 @@ namespace Distancify.LitiumAddOns.MediaMapper
         {
             var profile = CreateMediaProfile(builder.File);
 
-            if (profile == null || !profile.MediaEntityMappings.Any()) return null;
-
-            var productId = profile.MediaEntityMappings.Select(r => r.EntityId).OrderBy(r => r).First();
-            var archivePath = profile.ArchivePath ?? string.Format("{0}/{1}", productId.Substring(productId.Length - 2), productId);
-
-            foreach (var entity in profile.MediaEntityMappings)
+            if (profile == null)
             {
-                builder.MapTo(entity.EntityType, entity.EntityId, entity.FieldId);
+                return null;
+            }
+
+            var archivePath = profile.ArchivePath;
+            if (profile.MediaEntityMappings.Any())
+            {
+                var productId = profile.MediaEntityMappings.Select(r => r.EntityId).OrderBy(r => r).First();
+                archivePath = archivePath ?? string.Format("{0}/{1}", productId.Substring(productId.Length - 2), productId);
+
+                foreach (var entity in profile.MediaEntityMappings)
+                {
+                    builder.MapTo(entity.EntityType, entity.EntityId, entity.FieldId);
+                }
             }
 
             foreach (var field in profile.Fields)
