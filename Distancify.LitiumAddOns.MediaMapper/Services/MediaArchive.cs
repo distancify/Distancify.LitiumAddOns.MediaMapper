@@ -6,6 +6,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
 {
     public abstract class MediaArchive
     {   
+        public abstract string DefaultFolderTemplate { get; }
         public abstract File GetFile(Guid fileId);
         public abstract void EnsureFolderExists(string path);
         /// <summary>
