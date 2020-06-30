@@ -14,7 +14,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
         Lifetime = DependencyLifetime.Scoped)]
     public class MediaArchiveImpl : MediaArchive
     {
-        public override string DefaultFolderTemplate => "DefaultFolderTemplate";
+        public const string DefaultFolderTemplate = "DefaultFolderTemplate";
 
         private readonly FolderService _folderService;
         private readonly FieldTemplateService _fieldTemplateService;
@@ -34,7 +34,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
             _rootFolder = new RootFolder(fieldTemplateService, DefaultFolderTemplate);
         }
 
-        public override void EnsureFolderExists(string path)
+        public override void EnsureFolderExists(string path, string folderTemplateId)
         {
             Folder current = _rootFolder;
 
@@ -47,7 +47,8 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
                     continue;
                 }
 
-                current = CreateFolder(current.SystemId, folder, current.FieldTemplateSystemId);
+                var folderTemplate = _fieldTemplateService.Get<FolderFieldTemplate>(folderTemplateId);
+                current = CreateFolder(current.SystemId, folder, folderTemplate.SystemId);
             }
         }
 

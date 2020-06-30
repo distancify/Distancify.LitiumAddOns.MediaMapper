@@ -139,7 +139,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
         private void MoveMediaFile(MediaProfile media)
         {
             var f = string.Format("{0}/{1}", _uploadFolder, media.ArchivePath);
-            _mediaArchive.EnsureFolderExists(f);
+            _mediaArchive.EnsureFolderExists(f, MediaArchiveImpl.DefaultFolderTemplate);
             var targetFolder = _mediaArchive.GetFolder(f);
             _mediaArchive.MoveFile(media.File.SystemId, targetFolder);
         }
@@ -154,7 +154,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
 
         public Folder GetUploadFolder()
         {
-            _mediaArchive.EnsureFolderExists(_uploadFolder);
+            _mediaArchive.EnsureFolderExists(_uploadFolder, MediaArchiveImpl.DefaultFolderTemplate);
             return _mediaArchive.GetFolder(_uploadFolder);
         }
 
