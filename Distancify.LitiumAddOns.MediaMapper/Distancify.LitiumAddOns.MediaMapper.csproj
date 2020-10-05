@@ -133,6 +133,7 @@
     <Compile Include="Models\MediaEntityMapping.cs" />
     <Compile Include="MediaProfileBuilder.cs" />
     <Compile Include="Runner.cs" />
+    <Compile Include="Services\FieldSetters\MediaPointerImageFieldSetter.cs" />
     <Compile Include="Services\FieldSetters\PointerFieldSetter.cs" />
     <Compile Include="Services\MediaArchive.cs" />
     <Compile Include="Services\MediaArchiveImpl.cs" />
