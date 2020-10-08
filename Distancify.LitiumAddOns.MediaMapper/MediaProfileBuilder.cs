@@ -49,6 +49,22 @@ namespace Distancify.LitiumAddOns.MediaMapper
         /// Instructs the media mapper to link the media item to the given reference field on the entity
         /// </summary>
         /// <param name="type"></param>
+        /// <param name="entityId"></param>
+        /// <param name="fieldIds"></param>
+        /// <returns></returns>
+        public MediaProfileBuilder MapTo(EntityTypeEnum type, string entityId, IEnumerable<string> fieldIds)
+        {
+            foreach (var fieldId in fieldIds)
+            {
+                _mappings.Add(new MediaEntityMapping(type, entityId, fieldId));
+            }
+            return this;
+        }
+
+        /// <summary>
+        /// Instructs the media mapper to link the media item to the given reference field on the entity
+        /// </summary>
+        /// <param name="type"></param>
         /// <param name="entityIds"></param>
         /// <param name="fieldId"></param>
         /// <returns></returns>
