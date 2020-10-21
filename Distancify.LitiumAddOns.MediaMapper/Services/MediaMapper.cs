@@ -42,9 +42,9 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
             _uploadFolder = mediaUploadFolder?.Replace('\\', '/').Trim('/');
         }
 
-        public void Map()
+        public void Map(bool includeSubFolders = false)
         {
-            var mediaList = GetProfiledMediaFromUploadFolder().ToList();
+            var mediaList = GetProfiledMediaFromUploadFolder(includeSubFolders).ToList();
             AttachMetadata(mediaList);
 
             foreach (var media in mediaList)
@@ -138,15 +138,15 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
 
         private void MoveMediaFile(MediaProfile media)
         {
-            var f = string.Format("{0}/{1}", _uploadFolder, media.ArchivePath);
-            _mediaArchive.EnsureFolderExists(f, MediaArchiveImpl.DefaultFolderTemplate);
-            var targetFolder = _mediaArchive.GetFolder(f);
+            var path = media.ArchivePath.StartsWith("/") ? media.ArchivePath : string.Format("{0}/{1}", _uploadFolder, media.ArchivePath);
+            _mediaArchive.EnsureFolderExists(path, MediaArchiveImpl.DefaultFolderTemplate);
+            var targetFolder = _mediaArchive.GetFolder(path);
             _mediaArchive.MoveFile(media.File.SystemId, targetFolder);
         }
 
-        private IEnumerable<MediaProfile> GetProfiledMediaFromUploadFolder()
+        private IEnumerable<MediaProfile> GetProfiledMediaFromUploadFolder(bool includeSubFolders)
         {
-            return _mediaArchive.GetFiles(GetUploadFolder(), false)
+            return _mediaArchive.GetFiles(GetUploadFolder(), includeSubFolders)
                 .OrderBy(r => r.LastWriteTimeUtc)
                 .Select(r => _mediaProfiler.GetMediaProfile(new MediaProfileBuilder(r)))
                 .Where(r => r != null);
