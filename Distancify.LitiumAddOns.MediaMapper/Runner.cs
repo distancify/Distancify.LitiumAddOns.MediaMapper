@@ -69,15 +69,17 @@ namespace Distancify.LitiumAddOns.MediaMapper
                 _task = Task.Run(() =>
                 {
                     using (Solution.Instance.SystemToken.Use())
-                    using (distributedLockService.AcquireLock(lockKey, TimeSpan.FromSeconds(10)))
                     {
                         while (!_cancellationTokenSource.Token.IsCancellationRequested)
                         {
                             if (SleepUnlessCancelled(5, _cancellationTokenSource.Token)) return;
 
-                            foreach (var m in container.ResolveAll<IMediaMapper>())
+                            using (distributedLockService.AcquireLock(lockKey, TimeSpan.FromSeconds(10)))
                             {
-                                m.Map();
+                                foreach (var m in container.ResolveAll<IMediaMapper>())
+                                {
+                                    m.Map();
+                                }
                             }
                         }
                     }
