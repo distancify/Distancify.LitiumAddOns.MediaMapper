@@ -28,6 +28,12 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services.FieldSetters
                 .Where(r => r != null)
                 .ToList() ?? new List<File>();
 
+            if (images.Any(r => r.SystemId == file.SystemId))
+            {
+                // Field already contain this file. Don't do anything.
+                return;
+            }
+
             images.RemoveAll(r => string.Equals(r.Name, file.Name, StringComparison.OrdinalIgnoreCase));
             images.Add(_mediaArchive.GetFile(file.SystemId));
 
