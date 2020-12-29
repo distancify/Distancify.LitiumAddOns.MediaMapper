@@ -60,11 +60,7 @@ namespace Distancify.LitiumAddOns.MediaMapper.Services
         private Folder GetChildIfExists(string name, Folder parent)
         {
             var childFolders = _folderService.GetChildFolders(parent.SystemId);
-            if (childFolders.Any(f => string.Equals(f.Name, name, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                return childFolders.Single(r => r.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
-            }
-            return null;
+            return childFolders.FirstOrDefault(r => r.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         private Folder CreateFolder(Guid parentId, string name, Guid folderTemplateId)
