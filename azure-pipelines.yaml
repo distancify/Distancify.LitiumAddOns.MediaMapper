@@ -52,7 +52,7 @@ steps:
   displayName: 'Create NuGet package'
   inputs:
     command: 'pack'
-    packagesToPack: '**/Distancify.LitiumAddOns.Mailchimp.csproj'
+    packagesToPack: '**/Distancify.LitiumAddOns.MediaMapper.csproj'
     nobuild: true
     versioningScheme: 'off'
 
