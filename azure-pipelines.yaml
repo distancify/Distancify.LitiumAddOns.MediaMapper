@@ -34,17 +34,11 @@ steps:
     targetType: 'filePath'
     filePath: 'SetBuildVariables.ps1'
 
-- task: PowerShell@2
-  displayName: 'SetVersion.ps1'
-  inputs:
-    targetType: 'filePath'
-    filePath: 'SetVersion.ps1'
-
 - task: VSBuild@1
   displayName: 'Build solution'
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/p:SkipInvalidConfigurations=true /p:GeneratePackageOnBuild="false"'
+    msbuildArgs: '/p:SkipInvalidConfigurations=true /p:GeneratePackageOnBuild="false" /p:Version="$(packageVersion)" /p:FileVersion="$(fileVersion)" /p:AssemblyVersion="$(fileVersion)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
@@ -54,11 +48,13 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-- task: NuGetCommand@2
-  displayName: 'NuGet pack'
+- task: DotNetCoreCLI@2
+  displayName: 'Create NuGet package'
   inputs:
-    command: pack
-    packagesToPack: '**/Distancify.LitiumAddOns.MediaMapper.csproj'
+    command: 'pack'
+    packagesToPack: '**/Distancify.LitiumAddOns.Mailchimp.csproj'
+    nobuild: true
+    versioningScheme: 'off'
 
 - task: NuGetCommand@2
   displayName: 'Push to internal NuGet feed'

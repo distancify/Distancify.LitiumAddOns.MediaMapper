@@ -14,7 +14,16 @@ elseif ($Env:BUILD_BUILDNUMBER -match "^\d+.(\d+)$")
     $build = $date.Day
     $revision = $matches[1]
     $fileVersion = "$major.$minor.$build.$revision"
-    $packageVersion = "$fileVersion-ci"
+
+	if ($Env:BUILD_SOURCEBRANCH -match "^refs\/heads\/(?:features\/)?(.*)$")
+	{
+		$branchName = $matches[1]
+		$packageVersion = "$fileVersion-$branchName"
+	}
+	else
+	{
+		$packageVersion = "$fileVersion-ci"
+	}
     $pushToNugetOrg = 'false'
 }
 
