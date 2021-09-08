@@ -57,6 +57,10 @@
   <ItemGroup>
     <Compile Include="BaseMediaProfiler.cs" />
     <Compile Include="EntityTypeEnum.cs" />
+    <Compile Include="FieldTypes\AngularModuleRegistration.cs" />
+    <Compile Include="FieldTypes\FieldConstants.cs" />
+    <Compile Include="FieldTypes\MediaMappingButton\MediaMappingButtonEditFieldTypeConverter.cs" />
+    <Compile Include="FieldTypes\MediaMappingButton\MediaMappingButtonTypeMetadata.cs" />
     <Compile Include="IIoCContainerExtensions.cs" />
     <Compile Include="Jobs\MediaMappingJob.cs" />
     <Compile Include="Models\MediaEntityMapping.cs" />
@@ -79,6 +83,17 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Distancify.LitiumAddOns.MediaMapper.nuspec" />
+    <EmbeddedResource Include="dist\Index.cshtml" />
+    <EmbeddedResource Include="dist\main.js.map" />
+    <EmbeddedResource Include="dist\manifest.js.map" />
+    <EmbeddedResource Include="dist\MediaMapper.js.map" />
+    <EmbeddedResource Include="dist\polyfills-es5.js.map" />
+    <EmbeddedResource Include="dist\polyfills.js.map" />
+    <EmbeddedResource Include="dist\vendor.js.map" />
+    <None Include="src\Index.cshtml" />
+    <None Include="src\MediaMapper\components\media-mapping-button\media-mapping-button.component.js.map" />
+    <None Include="tsconfig.json" />
+    <None Include="tslint.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Distancify.SerilogExtensions">
@@ -106,5 +121,22 @@
       <Version>1.5.0</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="config\webpack\webpack.js" />
+    <EmbeddedResource Include="dist\main.js" />
+    <EmbeddedResource Include="dist\manifest.js" />
+    <EmbeddedResource Include="dist\MediaMapper.js" />
+    <EmbeddedResource Include="dist\polyfills-es5.js" />
+    <EmbeddedResource Include="dist\polyfills.js" />
+    <EmbeddedResource Include="dist\vendor.js" />
+    <Content Include="src\MediaMapper\components\media-mapping-button\media-mapping-button.component.html" />
+    <Content Include="src\MediaMapper\components\media-mapping-button\media-mapping-button.component.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="src\MediaMapper\components\media-mapping-button\media-mapping-button.component.ts" />
+    <TypeScriptCompile Include="src\MediaMapper\extensions.ts" />
+    <TypeScriptCompile Include="src\MediaMapper\main.ts" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

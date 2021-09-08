@@ -1,0 +1,62 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "field-types": {
+      "projectType": "application",
+      "schematics": {},
+      "root": "Distancify.LitiumAddOns.MediaMapper/src",
+      "sourceRoot": "Distancify.LitiumAddOns.MediaMapper/src",
+      "prefix": "litium-extensions",
+      "architect": {
+        "build": {
+          "builder": "@angular-builders/custom-webpack:browser",
+          "options": {
+            "customWebpackConfig": {
+              "path": "Distancify.LitiumAddOns.MediaMapper/config/webpack/webpack.js",
+              "mergeStrategies": { "optimization.minimizer": "replace" }
+            },
+            "outputPath": "Distancify.LitiumAddOns.MediaMapper/dist",
+            "index": "Distancify.LitiumAddOns.MediaMapper/src/Index.cshtml",
+            "main": "Distancify.LitiumAddOns.MediaMapper/src/MediaMapper/main.ts",
+            "tsConfig": "Distancify.LitiumAddOns.MediaMapper/tsconfig.json",
+            "commonChunk": false
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "extractCss": false,
+              "namedChunks": true,
+              "aot": false,
+              "extractLicenses": false,
+              "commonChunk": false,
+              "buildOptimizer": false,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                }
+              ]
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "Distancify.LitiumAddOns.MediaMapper/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "field-types"
+}

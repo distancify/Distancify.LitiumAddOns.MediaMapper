@@ -1,0 +1,8 @@
+﻿<field-editor [field]="field">
+    <div class="_view" preview>
+        <select [(ngModel)]="selectedMediaProfiler" style="margin: 0 10px 0 0;">
+            <option [value]="mediaProfiler.fullName" *ngFor="let mediaProfiler of mediaProfilers">{{mediaProfiler.name}}</option>
+        </select>
+        <button (click)="onClick()" style="margin: 0 0 3px 0;">Trigger media mapping</button>
+    </div>
+</field-editor>
