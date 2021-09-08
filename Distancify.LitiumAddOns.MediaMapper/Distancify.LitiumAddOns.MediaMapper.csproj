@@ -78,7 +78,8 @@
     <Compile Include="Services\FieldSetters\MediaPointerImageArrayFieldSetter.cs" />
     <Compile Include="MediaProfile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Site\Administration\Api\Controllers\MediaMappingController.cs" />
+    <Compile Include="Controllers\MediaMappingController.cs" />
+    <Compile Include="Setup.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

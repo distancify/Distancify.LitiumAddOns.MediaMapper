@@ -13,11 +13,6 @@ export class MediaMappingButton extends BaseFieldEditor implements OnInit {
         super(changeDetectorRef);
     }
 
-    mediaProfilers: any[] = [
-        { fullName: 'Didriksons.Web.ProductMedia.Mapping.MediaProfiler', name: 'MediaProfiler' }
-    ];
-    selectedMediaProfiler: string = 'Didriksons.Web.ProductMedia.Mapping.MediaProfiler';
-
     ngOnInit() {
         super.ngOnInit();
     }
@@ -35,8 +30,7 @@ export class MediaMappingButton extends BaseFieldEditor implements OnInit {
 
     getPayload(): Object {
         return {
-            'folderSystemId': this.getFolderSystemId(),
-            'mediaProfiler': this.selectedMediaProfiler
+            'folderSystemId': this.getFolderSystemId()
         };
     }
 

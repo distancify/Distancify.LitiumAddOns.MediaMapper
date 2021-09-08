@@ -2,12 +2,12 @@
 using Distancify.SerilogExtensions;
 using System.Threading.Tasks;
 using Hangfire;
-using Distancify.LitiumAddOns.MediaMapper;
 using Distancify.LitiumAddOns.MediaMapper.Services;
 using Litium.FieldFramework;
 using Litium.Media;
 using Litium.Products;
 using Litium.Foundation;
+using Litium;
 
 namespace Distancify.LitiumAddOns.MediaMapper.Jobs
 {
@@ -15,18 +15,20 @@ namespace Distancify.LitiumAddOns.MediaMapper.Jobs
     {
         [AutomaticRetry(Attempts = 0, OnAttemptsExceeded = AttemptsExceededAction.Delete)]
         [DisableConcurrentExecution(timeoutInSeconds: 10)]
-        public Task Execute(Guid folderSystemId, string mediaProfilerName)
+        public Task Execute(Guid folderSystemId)
         {
-            var logger = this.Log()
-                .ForContext("FolderSystemID", folderSystemId)
-                .ForContext("MediaProfilerName", mediaProfilerName);
+            var logger = this.Serilog()
+                .ForContext("FolderSystemID", folderSystemId);
             logger.Information("Running media mapping job ..");
 
             try
             {
                 using (Solution.Instance.SystemToken.Use())
                 {
-                    Map(folderSystemId, mediaProfilerName);
+                    foreach (var p in IoC.ResolveAll<IMediaProfiler>())
+                    {
+                        Map(folderSystemId, p);
+                    }
                 }
             }
             catch (Exception ex)
@@ -40,10 +42,9 @@ namespace Distancify.LitiumAddOns.MediaMapper.Jobs
             return Task.CompletedTask;
         }
 
-        private void Map(Guid folderSystemId, string mediaProfilerName)
+        private void Map(Guid folderSystemId, IMediaProfiler mediaProfiler)
         {
             var uploadFolder = GetUploadFolder(folderSystemId);
-            var mediaProfiler = GetInstance(mediaProfilerName);
             var mediaMapper = GetMediaMapper(mediaProfiler, uploadFolder);
             mediaMapper.Map(includeSubFolders: true);
         }
@@ -73,12 +74,6 @@ namespace Distancify.LitiumAddOns.MediaMapper.Jobs
                 Litium.IoC.ResolveAll<IFieldSetter>(),
                 mediaProfiler,
                 uploadFolder);
-        }
-
-        private IMediaProfiler GetInstance(string typeName)
-        {
-            Type type = Type.GetType(typeName);
-            return (IMediaProfiler)Activator.CreateInstance(type);
         }
     }
 }
